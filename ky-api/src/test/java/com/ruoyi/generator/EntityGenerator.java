@@ -1,4 +1,4 @@
-package com.ruoyi.generator;
+package com.ky.generator;
 
 
 import com.baomidou.mybatisplus.generator.AutoGenerator;
@@ -29,7 +29,7 @@ public class EntityGenerator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        gc.setOutputDir("E:\\java\\Supply\\ruoyi-api\\src\\main\\java");//这里写你自己的java目录
+        gc.setOutputDir("E:\\java\\Supply\\ky-api\\src\\main\\java");//这里写你自己的java目录
         gc.setFileOverride(true);//是否覆盖
         gc.setActiveRecord(true);
         gc.setEnableCache(false);// XML 二级缓存
@@ -51,7 +51,7 @@ public class EntityGenerator {
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("root");
-        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/ruoyi?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8");
+        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/ky_sys_db?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8");
         mpg.setDataSource(dsc);
 
         // 策略配置
@@ -64,9 +64,9 @@ public class EntityGenerator {
         // 包配置
         PackageConfig pc = new PackageConfig();
         pc.setParent(null);
-        pc.setEntity("com.ruoyi.app.common.persistence.model");
-        pc.setMapper("com.ruoyi.app.common.persistence.dao");
-        pc.setXml("com.ruoyi.app.common.persistence.dao.mapping");
+        pc.setEntity("com.ky.app.common.persistence.model");
+        pc.setMapper("com.ky.app.common.persistence.dao");
+        pc.setXml("com.ky.app.common.persistence.dao.mapping");
         pc.setService("TTT");       //本项目没用，生成之后删掉
         pc.setServiceImpl("TTT");   //本项目没用，生成之后删掉
         pc.setController("TTT");    //本项目没用，生成之后删掉

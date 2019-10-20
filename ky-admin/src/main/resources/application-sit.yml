@@ -1,3 +1,40 @@
+# 项目相关配置
+ky:
+  # 名称
+  name: KY
+  # 版本
+  version: 4.0.0
+  # 版权年份
+  copyrightYear: 2019
+  # 实例演示开关
+  demoEnabled: true
+  # 文件路径 示例（ Windows配置D:/ky/uploadPath，Linux配置 /home/ky/uploadPath）
+  profile: D:/ky/uploadPath
+  # 获取ip地址开关
+  addressEnabled: true
+
+
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为80
+  port: 80
+  servlet:
+    # 应用的访问路径
+    context-path: /
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # tomcat最大线程数，默认为200
+    max-threads: 800
+    # Tomcat启动初始化的线程数，默认值25
+    min-spare-threads: 30
+
+# 日志配置
+logging:
+  level:
+    com.ky: debug
+    org.springframework: warn
+
 # 数据源配置
 spring:
   datasource:
@@ -6,7 +43,7 @@ spring:
     druid:
       # 主库数据源
       master:
-        url: jdbc:mysql://localhost:3306/ruoyi?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        url: jdbc:mysql://localhost:3306/ky_sys_db?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
         username: root
         password: root123
       # 从库数据源
@@ -55,17 +92,34 @@ spring:
         wall:
           config:
             multi-statement-allow: true
-  redis:
-    password: #redis密码
-    host: #redis ip地址
-    port: #端口
-    jedis:
-      pool:
-        #最大连接数据库连接数,设 0 为没有限制
-        max-active: 8
-        #最大等待连接中的数量,设 0 为没有限制
-        max-idle: 8
-        #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
-        max-wait: -1ms
-        #最小等待连接中的数量,设 0 为没有限制
-        min-idle: 0
+
+  rabbitmq:
+    host: localhost # rabbitmq的连接地址
+    port: 5672 # rabbitmq的连接端口号
+    virtual-host: /ky # rabbitmq的虚拟host
+    username: ky # rabbitmq的用户名
+    password: ky # rabbitmq的密码
+    publisher-confirms: true #如果对异步消息需要回调必须设置为true
+
+# Redis
+redis:
+  database: 0  #Redis索引0~15，默认为0
+  host: 127.0.0.1
+  port: 6379
+  password:  #密码（默认为空）
+  ssl: true
+  lettuce: # 这里标明使用lettuce配置
+    pool:
+      max-total: 50   #连接池最大连接数（使用负值表示没有限制）
+      max-waitMillis: -1  #连接池最大阻塞等待时间（使用负值表示没有限制）
+      max-idle: 5     #连接池中的最大空闲连接
+      min-idle: 0     #连接池中的最小空闲连接
+  timeout: 30000    #连接超时时间（毫秒）
+
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size:  10MB
+      # 设置总上传的文件大小
+      max-request-size:  20MB

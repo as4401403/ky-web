@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.shop.mapper.StoreOrderMapper">
+<mapper namespace="com.ky.shop.mapper.StoreOrderMapper">
     
     <resultMap type="StoreOrder" id="StoreOrderResult">
         <result property="orderId"    column="order_id"    />
@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="editMoney"    column="edit_money"    />
 
         <association property="storeMember" column="user_id"
-                     select="com.ruoyi.shop.mapper.StoreMemberMapper.selectStoreMemberById"/>
+                     select="com.ky.shop.mapper.StoreMemberMapper.selectStoreMemberById"/>
 
     </resultMap>
 

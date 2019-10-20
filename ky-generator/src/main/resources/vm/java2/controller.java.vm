@@ -1,6 +1,5 @@
 package ${basePackage}.web.controller.${moduleName};
 
-import java.util.Arrays;
 import java.util.List;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-
 import com.ky.common.annotation.Log;
 import com.ky.common.enums.BusinessType;
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
 import com.ky.common.core.controller.BaseController;
 import com.ky.common.core.domain.AjaxResult;
-import com.ky.common.utils.StringUtils;
 import com.ky.common.utils.poi.ExcelUtil;
-import com.ky.common.core.text.Convert;
 #if($table.crud)
 import com.ky.common.core.page.TableDataInfo;
 #elseif($table.tree)
@@ -37,7 +32,8 @@ import com.ky.common.core.domain.Ztree;
  */
 @Controller
 @RequestMapping("/${moduleName}/${businessName}")
-public class ${ClassName}Controller extends BaseController {
+public class ${ClassName}Controller extends BaseController
+{
     private String prefix = "${moduleName}/${businessName}";
 
     @Autowired
@@ -45,7 +41,8 @@ public class ${ClassName}Controller extends BaseController {
 
     @RequiresPermissions("${permissionPrefix}:view")
     @GetMapping()
-    public String ${businessName}() {
+    public String ${businessName}()
+    {
         return prefix + "/${businessName}";
     }
 
@@ -56,7 +53,8 @@ public class ${ClassName}Controller extends BaseController {
     @RequiresPermissions("${permissionPrefix}:list")
     @PostMapping("/list")
     @ResponseBody
-    public List<${ClassName}> list(${ClassName} ${className}) {
+    public List<${ClassName}> list(${ClassName} ${className})
+    {
         List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
         return list;
     }
@@ -67,23 +65,11 @@ public class ${ClassName}Controller extends BaseController {
     @RequiresPermissions("${permissionPrefix}:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(${ClassName} ${className}) {
-        QueryWrapper<${ClassName}> queryWrapper = new QueryWrapper<>();
-    	// 需要根据页面查询条件进行组装
-    	/*if(StringUtils.isNotEmpty(sysDemo.getLoginName())) {
-    		queryWrapper.like("login_name", sysDemo.getLoginName());
-    	} 
-    	if(StringUtils.isNotEmpty(sysDemo.getUserName())) {
-    		queryWrapper.like("user_name", sysDemo.getUserName());
-    	}*/
-		// 特殊查询时条件需要进行单独组装
-		/*Map<String, Object> params = sysDemo.getParams();
-		if (StringUtils.isNotEmpty(params)) {
-			queryWrapper.ge(StringUtils.isNotEmpty((String)params.get("beginTime")), "create_time", params.get("beginTime"));
-			queryWrapper.le(StringUtils.isNotEmpty((String)params.get("endTime")), "create_time", params.get("endTime"));
-		}*/
+    public TableDataInfo list(${ClassName} ${className})
+    {
         startPage();
-        return getDataTable(${className}Service.list(queryWrapper));
+        List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
+        return getDataTable(list);
     }
 #end
 
@@ -93,8 +79,9 @@ public class ${ClassName}Controller extends BaseController {
     @RequiresPermissions("${permissionPrefix}:export")
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(${ClassName} ${className}) {
-        List<${ClassName}> list = ${className}Service.list(new QueryWrapper<>());
+    public AjaxResult export(${ClassName} ${className})
+    {
+        List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
         ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}.class);
         return util.exportExcel(list, "${businessName}");
     }
@@ -104,7 +91,8 @@ public class ${ClassName}Controller extends BaseController {
      * 新增${functionName}
      */
     @GetMapping("/add")
-    public String add() {
+    public String add()
+    {
         return prefix + "/add";
     }
 #elseif($table.tree)
@@ -112,8 +100,10 @@ public class ${ClassName}Controller extends BaseController {
      * 新增${functionName}
      */
     @GetMapping(value = { "/add/{${pkColumn.javaField}}", "/add/" })
-    public String add(@PathVariable(value = "${pkColumn.javaField}", required = false) Long ${pkColumn.javaField}, ModelMap mmap) {
-        if (StringUtils.isNotNull(${pkColumn.javaField})) {
+    public String add(@PathVariable(value = "${pkColumn.javaField}", required = false) Long ${pkColumn.javaField}, ModelMap mmap)
+    {
+        if (StringUtils.isNotNull(${pkColumn.javaField}))
+        {
             mmap.put("${className}", ${className}Service.select${ClassName}ById(${pkColumn.javaField}));
         }
         return prefix + "/add";
@@ -127,16 +117,18 @@ public class ${ClassName}Controller extends BaseController {
     @Log(title = "${functionName}", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(${ClassName} ${className}) {
-        return toAjax(${className}Service.save(${className}));
+    public AjaxResult addSave(${ClassName} ${className})
+    {
+        return toAjax(${className}Service.insert${ClassName}(${className}));
     }
 
     /**
      * 修改${functionName}
      */
     @GetMapping("/edit/{${pkColumn.javaField}}")
-    public String edit(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField}, ModelMap mmap) {
-        ${ClassName} ${className} = ${className}Service.getById(${pkColumn.javaField});
+    public String edit(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField}, ModelMap mmap)
+    {
+        ${ClassName} ${className} = ${className}Service.select${ClassName}ById(${pkColumn.javaField});
         mmap.put("${className}", ${className});
         return prefix + "/edit";
     }
@@ -148,8 +140,9 @@ public class ${ClassName}Controller extends BaseController {
     @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(${ClassName} ${className}) {
-        return toAjax(${className}Service.updateById(${className}));
+    public AjaxResult editSave(${ClassName} ${className})
+    {
+        return toAjax(${className}Service.update${ClassName}(${className}));
     }
 
 #if($table.crud)
@@ -160,8 +153,9 @@ public class ${ClassName}Controller extends BaseController {
     @Log(title = "${functionName}", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(String ids) {
-        return toAjax(${className}Service.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
+    public AjaxResult remove(String ids)
+    {
+        return toAjax(${className}Service.delete${ClassName}ByIds(ids));
     }
 #elseif($table.tree)
     /**
@@ -171,7 +165,8 @@ public class ${ClassName}Controller extends BaseController {
     @Log(title = "${functionName}", businessType = BusinessType.DELETE)
     @GetMapping("/remove/{${pkColumn.javaField}}")
     @ResponseBody
-    public AjaxResult remove(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField}) {
+    public AjaxResult remove(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField})
+    {
         return toAjax(${className}Service.delete${ClassName}ById(${pkColumn.javaField}));
     }
 #end
@@ -182,8 +177,10 @@ public class ${ClassName}Controller extends BaseController {
      */
 #set($BusinessName=$businessName.substring(0,1).toUpperCase() + ${businessName.substring(1)})
     @GetMapping(value = { "/select${BusinessName}Tree/{${pkColumn.javaField}}", "/select${BusinessName}Tree/" })
-    public String select${BusinessName}Tree(@PathVariable(value = "${pkColumn.javaField}", required = false) Long ${pkColumn.javaField}, ModelMap mmap) {
-        if (StringUtils.isNotNull(${pkColumn.javaField})) {
+    public String select${BusinessName}Tree(@PathVariable(value = "${pkColumn.javaField}", required = false) Long ${pkColumn.javaField}, ModelMap mmap)
+    {
+        if (StringUtils.isNotNull(${pkColumn.javaField}))
+        {
             mmap.put("${className}", ${className}Service.select${ClassName}ById(${pkColumn.javaField}));
         }
         return prefix + "/tree";
@@ -194,7 +191,8 @@ public class ${ClassName}Controller extends BaseController {
      */
     @GetMapping("/treeData")
     @ResponseBody
-    public List<Ztree> treeData() {
+    public List<Ztree> treeData()
+    {
         List<Ztree> ztrees = ${className}Service.select${ClassName}Tree();
         return ztrees;
     }
